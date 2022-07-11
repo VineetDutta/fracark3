@@ -1,4 +1,5 @@
-import React, { createContext, useMemo, useContext } from "react";
+import React, { createContext, useMemo, useReducer, useContext } from "react";
+import GlobalReducer from "./GlobalReducer";
 
 export interface DispatchType {
   type: string;
@@ -12,13 +13,17 @@ export interface ContextType {
 
 export type StateType = {
   darkMode: boolean;
+  asset: string;
+  list: string[];
 };
 
 const initialState: StateType = {
   darkMode: true,
+  asset: "2005",
+  list: [],
 };
 
-export const GlobalContext = createContext<{
+const GlobalContext = createContext<{
   state: StateType;
   dispatch: React.Dispatch<DispatchType>;
 }>({ state: initialState, dispatch: () => null });
@@ -35,12 +40,12 @@ interface IProps {
   children?: React.ReactNode;
 }
 
-  export const GlobalProvider: React.FC<IProps> = ({ children }) => {
-    const [state, dispatch] = useReducer(GlobalReducer, initialState);
+export const GlobalProvider: React.FC<IProps> = ({ children }) => {
+  const [state, dispatch] = useReducer(GlobalReducer, initialState);
 
-    const value = useMemo(() => ({ state, dispatch }), [state]);
+  const value = useMemo(() => ({ state, dispatch }), [state]);
 
-    return (
-      <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
-    );
-  };
+  return (
+    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
+  );
+};
